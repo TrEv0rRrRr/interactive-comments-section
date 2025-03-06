@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "tsx src/server.ts",
+    "dev": "nodemon --watch src --ext ts,tsx --exec tsx src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "prisma:migrate": "prisma migrate dev --name init",
-    "prisma:generate": "prisma generate"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
