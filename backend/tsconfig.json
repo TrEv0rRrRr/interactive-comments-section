@@ -4,6 +4,7 @@
     "module": "CommonJS",
     "target": "ESNext",
     "strict": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    "esModuleInterop": true,
   }
 }
