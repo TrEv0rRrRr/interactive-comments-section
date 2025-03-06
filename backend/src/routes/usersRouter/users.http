@@ -1,0 +1,22 @@
+### Get all users
+GET http://localhost:3000/users
+
+### Creating a new user
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "username": "djaksjd"
+}
+
+### Editing a user
+PATCH http://localhost:3000/users/24
+Content-Type: application/json
+
+{
+  "username": "Trevor",
+  "avatar": "./images/avatars/image-trevor.webp"
+}
+
+### Deleting a user
+DELETE http://localhost:3000/users/24
