@@ -1,5 +1,7 @@
+import Comment from "./components/Comment";
+
 function App() {
-  return <div>frontend</div>;
+  return <Comment />;
 }
 
 export default App;
