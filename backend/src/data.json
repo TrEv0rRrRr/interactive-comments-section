@@ -1,7 +1,7 @@
 {
   "currentUser": {
     "image": {
-      "webp": "./images/avatars/image-juliusomo.webp"
+      "webp": "avatars/image-juliusomo.webp"
     },
     "username": "juliusomo"
   },
@@ -13,7 +13,7 @@
       "score": 12,
       "user": {
         "image": {
-          "webp": "./images/avatars/image-amyrobson.webp"
+          "webp": "avatars/image-amyrobson.webp"
         },
         "username": "amyrobson"
       },
@@ -26,7 +26,7 @@
       "score": 5,
       "user": {
         "image": {
-          "webp": "./images/avatars/image-maxblagun.webp"
+          "webp": "avatars/image-maxblagun.webp"
         },
         "username": "maxblagun"
       },
@@ -39,7 +39,7 @@
           "replyingTo": "maxblagun",
           "user": {
             "image": {
-              "webp": "./images/avatars/image-ramsesmiron.webp"
+              "webp": "avatars/image-ramsesmiron.webp"
             },
             "username": "ramsesmiron"
           }
@@ -52,7 +52,7 @@
           "replyingTo": "ramsesmiron",
           "user": {
             "image": {
-              "webp": "./images/avatars/image-juliusomo.webp"
+              "webp": "avatars/image-juliusomo.webp"
             },
             "username": "juliusomo"
           }

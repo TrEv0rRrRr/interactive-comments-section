@@ -9,6 +9,21 @@ router.get("/", async (req: Request, res: Response) => {
   res.json(users);
 });
 
+router.get("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const user = await prisma.user.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!user) {
+    res.status(404).json({ error: "No se encontró al usuario." });
+    return;
+  }
+
+  res.json(user);
+});
+
 router.post("/", async (req: Request, res: Response) => {
   try {
     const { username, avatar } = req.body;
