@@ -35,8 +35,10 @@ const Comment = () => {
         return (
           <div
             key={id}
-            className={`flex w-full flex-col gap-3 p-3  rounded-xl bg-White ${
-              replyingTo ? "mx-5 border-l-2 border-Moderate-blue" : ""
+            className={`flex w-full flex-col gap-3 p-3  rounded-xl bg-White relative ${
+              replyingTo
+                ? "mx-5 after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-Moderate-blue/30 after:left-[-20px] after:top-0"
+                : ""
             }`}
           >
             <div className="flex items-center gap-10">
