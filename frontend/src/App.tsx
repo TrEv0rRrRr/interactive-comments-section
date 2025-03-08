@@ -1,7 +1,13 @@
+import Chat from "./components/Chat";
 import Comment from "./components/Comment";
 
 function App() {
-  return <Comment />;
+  return (
+    <>
+      <Comment />
+      <Chat />
+    </>
+  );
 }
 
 export default App;
