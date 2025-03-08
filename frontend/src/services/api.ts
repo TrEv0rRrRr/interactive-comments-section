@@ -52,3 +52,45 @@ export const createComment = async (content: string): Promise<Comment> => {
   });
   return response.data;
 };
+
+/**
+ * Deletes a comment by its ID.
+ *
+ * @param {number} id - The ID of the comment to delete.
+ * @returns {Promise<any>} A promise that resolves to the response data from the delete request.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const deleteComment = async (id: number): Promise<any> => {
+  const response = await axios.delete(`${API_COMMENTS_URL}/${id}`);
+  return response.data;
+};
+
+/**
+ * Edits a comment with the specified updates.
+ *
+ * @param id - The ID of the comment to edit.
+ * @param updates - An object containing the updates to apply to the comment.
+ * @param updates.content - The new content of the comment (optional).
+ * @param updates.score - The new score of the comment (optional).
+ * @returns A promise that resolves to the updated comment.
+ * @throws Will throw an error if the request fails.
+ */
+export const editComment = async (
+  id: number,
+  updates: { content?: string; score?: number }
+): Promise<Comment> => {
+  try {
+    const validUpdates = Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      Object.entries(updates).filter(([_, value]) => value !== undefined)
+    );
+    const response = await axios.patch(
+      `${API_COMMENTS_URL}/${id}`,
+      validUpdates
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
