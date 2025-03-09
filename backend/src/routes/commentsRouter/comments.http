@@ -14,12 +14,14 @@ Content-Type: application/json
 }
 
 ### Editing a comment
-PATCH http://localhost:3000/comments/44
+PATCH http://localhost:3000/comments/58
 Content-Type: application/json
 
 {
-  "content": "Bro, buen comentario +1000 y like.",
-  "score": 100,
+  "content": "I couldn't agree more with this. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stay constant.",
+  "score": 2,
+  "userId": 53,
+  "parentId": 59,
   "replyingTo": "ramsesmiron"
 }
 
