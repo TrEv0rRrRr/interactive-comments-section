@@ -14,12 +14,13 @@ Content-Type: application/json
 }
 
 ### Editing a comment
-PATCH http://localhost:3000/comments/21
+PATCH http://localhost:3000/comments/44
 Content-Type: application/json
 
 {
   "content": "Bro, buen comentario +1000 y like.",
-  "score": 100
+  "score": 100,
+  "replyingTo": "ramsesmiron"
 }
 
 ### Deleting a comment

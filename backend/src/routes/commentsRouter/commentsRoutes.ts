@@ -124,6 +124,18 @@ router.patch("/:id", async (req: Request, res: Response) => {
           .json({ error: "No se encontró al usuario al que se responde" });
         return;
       }
+
+      const commentCreator = await prisma.user.findUnique({
+        where: { id: comment.userId },
+      });
+
+      if (replyToUser.username === commentCreator?.username) {
+        res.status(400).json({
+          error:
+            "El usuario que creó el comentario y al que quiere responder son los mismos.",
+        });
+        return;
+      }
     }
 
     let updatedParentId = comment.parentId;
