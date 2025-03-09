@@ -1,22 +1,20 @@
+import { useState } from "react";
 import DeleteIcon from "../assets/icon-delete.svg";
 import EditIcon from "../assets/icon-edit.svg";
 import ReplyIcon from "../assets/icon-reply.svg";
 import { formatUserAt } from "../helpers/formatUserAt";
 import { useCommentActions } from "../hooks/useCommentActions";
 import { useComments } from "../hooks/useComments";
+import useModal from "../hooks/useModal";
 import { useUsers } from "../hooks/useUsers";
 import { type Comment as CommentType } from "../types/Comments";
 import Button from "./Button";
 import Counter from "./Counter";
+import Modal from "./Modal";
 
 const Comment = () => {
-  const {
-    comments,
-    addReply,
-    updateComment,
-    removeComment,
-    getCommentsByParentId,
-  } = useComments();
+  const { comments, addReply, updateComment, getCommentsByParentId } =
+    useComments();
 
   const {
     editingCommentId,
@@ -30,6 +28,10 @@ const Comment = () => {
     startReplying,
     cancelReplying,
   } = useCommentActions();
+
+  const { openModal } = useModal();
+
+  const [idToDelete, setIdToDelete] = useState<number | null>(null);
 
   // Get all user IDs from comments
   const userIds = comments.map((comment) => comment.userId);
@@ -54,7 +56,10 @@ const Comment = () => {
     if (success) cancelEditing();
   };
 
-  const handleDelete = async (id: number) => await removeComment(id);
+  const handleDelete = (id: number) => {
+    setIdToDelete(id);
+    openModal();
+  };
 
   const handleReply = async (parentId: number, replyingToUsername: string) => {
     if (replyContent.trim() === "") return;
@@ -215,11 +220,12 @@ const Comment = () => {
   };
 
   return (
-    <div className="flex flex-col p-1 gap-5">
+    <div className="flex flex-col p-1 gap-5 relative">
       {/* Renderizar solo comentarios raíz (sin parentId) */}
       {commentsByParentId["root"]?.map((comment) =>
         renderCommentWithReplies(comment)
       )}
+      <Modal id={idToDelete} />
     </div>
   );
 };
