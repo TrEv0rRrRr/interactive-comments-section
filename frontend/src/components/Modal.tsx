@@ -27,7 +27,7 @@ const Modal = ({ id }: Props) => {
 
   return (
     <dialog
-      className={`flex flex-col bg-white gap-3 w-[21rem] z-10 py-5 px-7 rounded-md border transition-opacity ${openOpacityStyle}`}
+      className={`flex flex-col bg-white gap-3 w-[21rem] z-10 py-5 px-7 rounded-md border transition-opacity ${openOpacityStyle} fixed left-5 top-0 translate-y-1/2`}
       ref={dialogRef}
       onClose={closeModal}
     >
