@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { createComment } from "../services/api";
+import { useComments } from "../hooks/useComments";
 
 const Chat = () => {
   const [comment, setComment] = useState("");
+  const { addComment } = useComments();
 
   const handleClick = async () => {
     if (comment.trim() === "") return;
 
     try {
-      await createComment(comment, {});
-      setComment("");
+      const success = await addComment(comment);
+      if (success) {
+        setComment("");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -19,7 +22,7 @@ const Chat = () => {
     setComment(e.target.value);
 
   return (
-    <div className="flex flex-col bg-White p-5 gap-5 w-full">
+    <div className="flex flex-col bg-White p-5 gap-5 w-full rounded-xl mt-4">
       <textarea
         placeholder="Add a comment..."
         className="border-[1px] border-Grayish-Blue/30 rounded 
