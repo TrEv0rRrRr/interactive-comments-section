@@ -57,16 +57,29 @@ export const getUserById = async (id: number): Promise<User> => {
 /**
  * Creates a new comment with the given content.
  *
- * @param {string} content - The content of the comment to be created.
+ * @param {string} content - The content of the comment.
+ * @param {Object} options - Additional options for the comment.
+ * @param {number} options.userId - ID of the user creating the comment.
+ * @param {number} [options.parentId] - ID of the parent comment (for replies).
+ * @param {string} [options.replyingTo] - Username of the user being replied to.
  * @returns {Promise<Comment>} A promise that resolves to the created comment.
  * @throws Will throw an error if the request fails.
  */
-export const createComment = async (content: string): Promise<Comment> => {
+export const createComment = async (
+  content: string,
+  options: {
+    userId?: number;
+    parentId?: number;
+    replyingTo?: string;
+  } = { userId: 25 }
+): Promise<Comment> => {
   try {
     const response = await axios.post(API_COMMENTS_URL, {
       content,
       score: 0,
-      userId: 25,
+      userId: options.userId || 25,
+      parentId: options.parentId,
+      replyingTo: options.replyingTo,
     });
     return response.data;
   } catch (error) {
