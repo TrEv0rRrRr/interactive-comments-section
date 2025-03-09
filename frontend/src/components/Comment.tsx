@@ -137,7 +137,6 @@ const Comment = () => {
     }
   };
 
-  // Organizar los comentarios por jerarquía para renderizarlos
   const commentsByParentId: Record<string, Comment[]> = {};
 
   // Agrupar comentarios por su parentId
@@ -149,8 +148,8 @@ const Comment = () => {
     commentsByParentId[parentId].push(comment);
   });
 
-  // Renderizar un comentario y sus respuestas
-  const renderCommentWithReplies = (comment: Comment) => {
+  // Renderizar un comentario y sus respuestas recursivamente
+  const renderCommentWithReplies = (comment: Comment, level = 0) => {
     const { content, score, id, userId, createdAt, replyingTo } = comment;
     const isCurrentUser = users[userId]?.username === currentUser;
     const isEditing = editingCommentId === id;
@@ -167,11 +166,13 @@ const Comment = () => {
         <div
           className={`flex w-full flex-col gap-3 p-3 rounded-xl bg-White relative group ${
             replyingTo
-              ? "mx-5 after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-Moderate-blue/30 after:left-[-20px] after:top-0"
+              ? `ml-${
+                  level * 5
+                } after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-Moderate-blue/30 after:left-[-20px] after:top-0`
               : ""
           }`}
         >
-          {/* Contenido del comentario (igual que antes) */}
+          {/* Contenido del comentario */}
           <div className="flex items-center gap-3">
             <div className="flex gap-3 items-center">
               <img
@@ -283,11 +284,10 @@ const Comment = () => {
             <textarea
               placeholder={`Replying to @${username}...`}
               className="border-[1px] border-Grayish-Blue/30 rounded 
-              px-5 h-24 py-2 resize-none placeholder:text-Grayish-Blue hover:border-Moderate-blue focus:outline-Moderate-blue active:outline-Moderate-blue transition-all"
+            px-5 h-24 py-2 resize-none placeholder:text-Grayish-Blue hover:border-Moderate-blue focus:outline-Moderate-blue active:outline-Moderate-blue transition-all"
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
             />
-
             <div className="flex justify-between items-center">
               <img
                 src="avatars/image-juliusomo.webp"
@@ -304,21 +304,17 @@ const Comment = () => {
           </div>
         )}
 
-        {/* Renderizar respuestas directas a este comentario */}
-        {commentsByParentId[String(id)] && (
-          <div className="flex flex-col gap-3 ml-5 pl-5 border-l-2 border-Moderate-blue/30">
-            {commentsByParentId[String(id)].map((reply) =>
-              renderCommentWithReplies(reply)
-            )}
-          </div>
+        {/* Renderizar respuestas anidadas con indentación */}
+        {commentsByParentId[String(id)]?.map((reply) =>
+          renderCommentWithReplies(reply, level + 1)
         )}
       </div>
     );
   };
 
+  // Renderizar comentarios raíz (sin padre)
   return (
     <div className="flex flex-col p-1 gap-5">
-      {/* Solo renderizar comentarios raíz (sin padre) */}
       {commentsByParentId["root"]?.map((comment) =>
         renderCommentWithReplies(comment)
       )}
