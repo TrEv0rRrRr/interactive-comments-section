@@ -9,11 +9,13 @@ router.get("/", async (req: Request, res: Response) => {
   res.json(users);
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+router.get("/:identifier", async (req: Request, res: Response) => {
+  const { identifier } = req.params;
+
+  const isNumeric = !isNaN(Number(identifier));
 
   const user = await prisma.user.findUnique({
-    where: { id: Number(id) },
+    where: isNumeric ? { id: Number(identifier) } : { username: identifier },
   });
 
   if (!user) {
