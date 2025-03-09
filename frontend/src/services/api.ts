@@ -92,7 +92,7 @@ export const createComment = async (
     const response = await axios.post(API_COMMENTS_URL, {
       content,
       score: 0,
-      userId: 49,
+      userId: 53,
       parentId: options.parentId,
       replyingTo: options.replyingTo,
     });
