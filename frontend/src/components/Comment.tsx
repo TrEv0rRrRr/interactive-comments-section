@@ -8,6 +8,7 @@ import { useComments } from "../hooks/useComments";
 import useModal from "../hooks/useModal";
 import { useUsers } from "../hooks/useUsers";
 import { type Comment as CommentType } from "../types/Comments";
+import { getRelativeTime } from "../utils/getRelativeTime";
 import Button from "./Button";
 import Counter from "./Counter";
 import Modal from "./Modal";
@@ -78,10 +79,10 @@ const Comment = () => {
     const username = users[userId]?.username || "";
 
     return (
-      <div key={id} className="flex flex-col gap-3 mb-4">
+      <div key={id} className="flex flex-col gap-3">
         {/* Comentario actual */}
         <div
-          className={`flex w-full flex-col gap-3 p-3 rounded-xl bg-White relative group ${
+          className={`flex w-full flex-col gap-3 p-3 rounded-xl bg-White relative ${
             replyingTo
               ? "after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-Moderate-blue/30 after:left-[-20px] after:top-0"
               : ""
@@ -104,7 +105,7 @@ const Comment = () => {
               </div>
             </div>
             <span className="text-Grayish-Blue">
-              {new Date(createdAt).toLocaleDateString()}
+              {getRelativeTime(new Date(createdAt))}
             </span>
           </div>
 
@@ -209,7 +210,7 @@ const Comment = () => {
 
         {/* Respuestas a este comentario */}
         {commentsByParentId[String(id)] && (
-          <div className="ml-5 pl-5 border-l-2 border-Moderate-blue/30 flex flex-col gap-3">
+          <div className="pl-5 border-l-2 border-Moderate-blue/30 flex flex-col gap-3">
             {commentsByParentId[String(id)].map((reply) =>
               renderCommentWithReplies(reply)
             )}
