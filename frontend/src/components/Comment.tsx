@@ -1,165 +1,70 @@
-import { useEffect, useState } from "react";
 import DeleteIcon from "../assets/icon-delete.svg";
 import EditIcon from "../assets/icon-edit.svg";
 import ReplyIcon from "../assets/icon-reply.svg";
 import { formatUserAt } from "../helpers/formatUserAt";
-import {
-  createComment,
-  deleteComment,
-  editComment,
-  getComments,
-  getUserById,
-} from "../services/api";
-import { type Comment } from "../types/Comments";
-import { User } from "../types/Users";
+import { useCommentActions } from "../hooks/useCommentActions";
+import { useComments } from "../hooks/useComments";
+import { useUsers } from "../hooks/useUsers";
+import { type Comment as CommentType } from "../types/Comments";
 import Button from "./Button";
 import Counter from "./Counter";
 
 const Comment = () => {
-  // CARGAR DATOS
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [users, setUsers] = useState<Record<number, User>>({});
+  const {
+    comments,
+    addReply,
+    updateComment,
+    removeComment,
+    getCommentsByParentId,
+  } = useComments();
 
-  // EDIT MODE STATES
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
-  const [editedContent, setEditedContent] = useState<string>("");
+  const {
+    editingCommentId,
+    editedContent,
+    setEditedContent,
+    replyingToId,
+    replyContent,
+    setReplyContent,
+    startEditing,
+    cancelEditing,
+    startReplying,
+    cancelReplying,
+  } = useCommentActions();
 
-  // REPLY MODE STATES
-  const [replyingToId, setReplyingToId] = useState<number | null>(null);
-  const [replyContent, setReplyContent] = useState("");
+  // Get all user IDs from comments
+  const userIds = comments.map((comment) => comment.userId);
+  const { users } = useUsers(userIds);
 
   const currentUser = "juliusomo";
-
-  useEffect(() => {
-    getComments().then(setComments);
-  }, []);
-
-  useEffect(() => {
-    const userIds = [...new Set(comments.map((comment) => comment.userId))];
-    userIds.forEach((userId) => {
-      if (!users[userId]) {
-        getUserById(userId).then((userData) => {
-          setUsers((prevUsers) => ({
-            ...prevUsers,
-            [userId]: userData,
-          }));
-        });
-      }
-    });
-  }, [comments, users]);
-
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteComment(id);
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== id)
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const startEditing = (id: number, currentContent: string) => {
-    setEditingCommentId(id);
-    setEditedContent(currentContent);
-  };
+  const commentsByParentId = getCommentsByParentId();
 
   const handleEdit = async (
     id: number,
     score: number,
-    replyingUsername: string | null,
-    parentId: number | null
+    replyingTo?: string | null,
+    parentId?: number | null
   ) => {
-    try {
-      const updatedComment = await editComment(id, {
-        content: editedContent,
-        score,
-        parentId,
-        replyingTo: replyingUsername,
-      });
+    const success = await updateComment(id, {
+      content: editedContent,
+      score,
+      replyingTo,
+      parentId,
+    });
 
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === id ? updatedComment : comment
-        )
-      );
-      setEditingCommentId(null);
-    } catch (error) {
-      console.error(error);
-    }
+    if (success) cancelEditing();
   };
 
-  const startReplying = (id: number) => {
-    setReplyingToId(id);
-    setReplyContent("");
-  };
+  const handleDelete = async (id: number) => await removeComment(id);
 
   const handleReply = async (parentId: number, replyingToUsername: string) => {
     if (replyContent.trim() === "") return;
 
-    try {
-      // Obtener el ID del usuario actual (juliusomo)
-      // * const currentUserId = 4; Deberías tener este valor almacenado o recuperarlo
+    const success = await addReply(replyContent, parentId, replyingToUsername);
 
-      const reply = await createComment(replyContent, {
-        parentId: parentId,
-        replyingTo: replyingToUsername, // Si tu API lo requiere
-      });
-
-      // Lógica para insertar la respuesta en la posición correcta
-      const newComments = [...comments];
-
-      // Buscar el índice del comentario padre
-      const parentIndex = newComments.findIndex(
-        (comment) => comment.id === parentId
-      );
-
-      if (parentIndex !== -1) {
-        // Encontrar la última respuesta relacionada con este comentario padre
-        let lastReplyIndex = parentIndex;
-        for (let i = parentIndex + 1; i < newComments.length; i++) {
-          if (newComments[i].parentId === parentId) {
-            lastReplyIndex = i;
-          } else {
-            // Si encontramos un comentario que no es respuesta al padre o
-            // es respuesta a otro comentario, nos detenemos
-            const nextIsChild = newComments[i].parentId !== null;
-            const nextIsNotChildOfCurrent =
-              nextIsChild && newComments[i].parentId !== parentId;
-
-            if (!nextIsChild || nextIsNotChildOfCurrent) {
-              break;
-            }
-          }
-        }
-
-        // Insertar la nueva respuesta justo después de la última respuesta
-        newComments.splice(lastReplyIndex + 1, 0, reply);
-        setComments(newComments);
-      } else {
-        // Si por alguna razón no encontramos el padre, agregamos al final
-        setComments((prevComments) => [...prevComments, reply]);
-      }
-
-      setReplyingToId(null);
-      setReplyContent("");
-    } catch (error) {
-      console.error(error);
-    }
+    if (success) cancelReplying();
   };
 
-  // Organizar comentarios por parentId
-  const commentsByParentId: Record<string, Comment[]> = {};
-  comments.forEach((comment) => {
-    const parentId = comment.parentId ? String(comment.parentId) : "root";
-    if (!commentsByParentId[parentId]) {
-      commentsByParentId[parentId] = [];
-    }
-    commentsByParentId[parentId].push(comment);
-  });
-
-  // Función recursiva para renderizar comentarios con sus respuestas
-  const renderCommentWithReplies = (comment: Comment) => {
+  const renderCommentWithReplies = (comment: CommentType) => {
     const { content, score, id, userId, createdAt, replyingTo, parentId } =
       comment;
     const isCurrentUser = users[userId]?.username === currentUser;
@@ -216,7 +121,13 @@ const Comment = () => {
           <div className="flex items-center justify-between w-full">
             <Counter count={score} />
             {isEditing && isCurrentUser ? (
-              <div>
+              <div className="flex gap-3">
+                <button
+                  className="border border-Moderate-blue text-Moderate-blue font-medium rounded px-5 py-2 cursor-pointer hover:bg-gray-100 transition-all"
+                  onClick={cancelEditing}
+                >
+                  CANCEL
+                </button>
                 <button
                   className="bg-Moderate-blue text-white font-medium rounded px-5 py-2 cursor-pointer hover:bg-Moderate-blue/40 transition-all"
                   onClick={() => handleEdit(id, score, replyingTo, parentId)}
@@ -228,7 +139,7 @@ const Comment = () => {
               <div className="flex items-center">
                 {!isEditing && isCurrentUser ? (
                   <>
-                    <div className="hidden group-hover:flex gap-3">
+                    <div className="flex gap-3">
                       <Button
                         color="text-Soft-Red"
                         source={DeleteIcon}
@@ -239,13 +150,6 @@ const Comment = () => {
                         source={EditIcon}
                         text="Edit"
                         handleClick={() => startEditing(id, content)}
-                      />
-                    </div>
-                    <div className="block group-hover:hidden">
-                      <Button
-                        source={ReplyIcon}
-                        text="Reply"
-                        handleClick={() => startReplying(id)}
                       />
                     </div>
                   </>
@@ -280,12 +184,20 @@ const Comment = () => {
                 alt="Your profile picture"
                 className="w-8 h-8 object-contain"
               />
-              <button
-                className="bg-Moderate-blue text-white font-medium rounded px-5 py-2 cursor-pointer hover:bg-Moderate-blue/40 transition-all"
-                onClick={() => handleReply(id, username)}
-              >
-                REPLY
-              </button>
+              <div className="flex gap-3">
+                <button
+                  className="border border-Moderate-blue text-Moderate-blue font-medium rounded px-5 py-2 cursor-pointer hover:bg-gray-100 transition-all"
+                  onClick={cancelReplying}
+                >
+                  CANCEL
+                </button>
+                <button
+                  className="bg-Moderate-blue text-white font-medium rounded px-5 py-2 cursor-pointer hover:bg-Moderate-blue/40 transition-all"
+                  onClick={() => handleReply(id, username)}
+                >
+                  REPLY
+                </button>
+              </div>
             </div>
           </div>
         )}
