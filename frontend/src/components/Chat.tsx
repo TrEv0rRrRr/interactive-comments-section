@@ -8,7 +8,7 @@ const Chat = () => {
     if (comment.trim() === "") return;
 
     try {
-      await createComment(comment);
+      await createComment(comment, {});
       setComment("");
     } catch (error) {
       console.error(error);
