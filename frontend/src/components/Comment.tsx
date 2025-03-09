@@ -17,10 +17,10 @@ import Counter from "./Counter";
 const Comment = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [users, setUsers] = useState<Record<number, User>>({});
+  const currentUser = "juliusomo";
+
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
-
-  const currentUser = "juliusomo";
 
   useEffect(() => {
     getComments().then(setComments);
@@ -56,10 +56,16 @@ const Comment = () => {
     setEditedContent(currentContent);
   };
 
-  const handleEdit = async (id: number) => {
+  const handleEdit = async (
+    id: number,
+    score: number,
+    replyingTo?: string | null
+  ) => {
     try {
       const updatedComment = await editComment(id, {
         content: editedContent,
+        score,
+        replyingTo,
       });
 
       setComments((prevComments) =>
@@ -78,6 +84,11 @@ const Comment = () => {
       {comments.map(({ content, score, id, userId, createdAt, replyingTo }) => {
         const isCurrentUser = users[userId]?.username === currentUser;
         const isEditing = editingCommentId === id;
+
+        const textAreaStyles =
+          isCurrentUser && isEditing
+            ? "border-[1px] border-Grayish-Blue/30 rounded px-5 pb-5 hover:border-Moderate-blue transition-all focus:outline-Moderate-blue active:outline-Moderate-blue pt-4 h-max"
+            : "p-0 transition-all";
 
         return (
           <div
@@ -110,16 +121,29 @@ const Comment = () => {
             </div>
 
             {isCurrentUser && isEditing ? (
-              <textarea
-                className={`text-Grayish-Blue
-                  ${
-                    isCurrentUser && isEditing
-                      ? "border-[1px] border-Grayish-Blue/30 rounded px-5 pb-5 hover:border-Moderate-blue transition-all focus:outline-Moderate-blue active:outline-Moderate-blue pt-4 h-max"
-                      : "p-0 transition-all"
-                  }`}
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-              />
+              <div>
+                {replyingTo && (
+                  <span className="absolute top-2 left-5 text-Moderate-blue font-medium">
+                    {formatUserAt(replyingTo)}
+                  </span>
+                )}
+                <textarea
+                  className={`text-Grayish-Blue resize-none
+                  ${textAreaStyles}`}
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                  style={
+                    replyingTo
+                      ? {
+                          paddingLeft: `${
+                            replyingTo !== undefined &&
+                            (formatUserAt(replyingTo)?.length ?? 0) * 8 + 10
+                          }px`,
+                        }
+                      : {}
+                  }
+                />
+              </div>
             ) : (
               <p>
                 <span className="text-Moderate-blue font-medium">
@@ -135,7 +159,7 @@ const Comment = () => {
                 <div>
                   <button
                     className="bg-Moderate-blue text-white font-medium rounded px-5 py-2 cursor-pointer hover:bg-Moderate-blue/40 transition-all"
-                    onClick={() => handleEdit(id)}
+                    onClick={() => handleEdit(id, score, replyingTo)}
                   >
                     UPDATE
                   </button>
