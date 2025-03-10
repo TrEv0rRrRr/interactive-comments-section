@@ -14,14 +14,14 @@ Content-Type: application/json
 }
 
 ### Editing a comment
-PATCH http://localhost:3000/comments/58
+PATCH http://localhost:3000/comments/73
 Content-Type: application/json
 
 {
   "content": "I couldn't agree more with this. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stay constant.",
   "score": 2,
-  "userId": 53,
-  "parentId": 59,
+  "userId": 57,
+  "parentId": 74,
   "replyingTo": "ramsesmiron"
 }
 
