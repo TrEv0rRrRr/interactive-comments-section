@@ -82,7 +82,7 @@ const Comment = () => {
       <div key={id} className="flex flex-col gap-3">
         {/* Comentario actual */}
         <div
-          className={`flex w-full flex-col gap-3 p-3 rounded-xl bg-White relative ${
+          className={`flex w-full flex-col gap-5 p-3 pt-5 rounded-xl bg-White relative ${
             replyingTo
               ? "after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-Moderate-blue/30 after:left-[-20px] after:top-0"
               : ""
@@ -115,16 +115,12 @@ const Comment = () => {
                   {getRelativeTime(new Date(createdAt))}
                 </span>
               </div>
-
               {isCurrentUser && isEditing ? (
-                <div className="flex">
-                  <Counter count={score} />
-                  <textarea
-                    className="border-[1px] border-Grayish-Blue/30 rounded px-5 pb-5 hover:border-Moderate-blue transition-all focus:outline-Moderate-blue active:outline-Moderate-blue pt-4 h-max resize-none"
-                    value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
-                  />
-                </div>
+                <textarea
+                  className="border-[1px] border-Grayish-Blue/30 rounded px-5 pb-5 hover:border-Moderate-blue transition-all focus:outline-Moderate-blue active:outline-Moderate-blue pt-4 h-max resize-none w-[37rem]"
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                />
               ) : (
                 <p className="text-Grayish-Blue">
                   <span className="text-Moderate-blue font-medium">
@@ -136,7 +132,7 @@ const Comment = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full md:justify-end">
             <div className="block md:hidden">
               <Counter count={score} />
             </div>
@@ -156,7 +152,7 @@ const Comment = () => {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center md:absolute md:top-4 md:right-8">
+              <div className="flex items-center md:absolute md:top-6 md:right-8">
                 {!isEditing && isCurrentUser ? (
                   <>
                     <div className="flex gap-3">
@@ -192,19 +188,24 @@ const Comment = () => {
           <div className="flex flex-col bg-White p-5 gap-5 w-full mt-2 rounded-xl">
             <textarea
               placeholder={`Reply to @${username}...`}
-              className="border-[1px] border-Grayish-Blue/30 rounded 
-              px-5 h-24 py-2 resize-none placeholder:text-Grayish-Blue hover:border-Moderate-blue focus:outline-Moderate-blue active:outline-Moderate-blue transition-all"
+              className="border-[1px] border-Grayish-Blue/30 rounded px-5 h-24 py-2 resize-none placeholder:text-Grayish-Blue hover:border-Moderate-blue focus:outline-Moderate-blue active:outline-Moderate-blue transition-all block md:hidden"
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
             />
 
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center md:gap-5">
               <img
                 src="avatars/image-juliusomo.webp"
                 alt="Your profile picture"
-                className="w-8 h-8 object-contain"
+                className="w-8 h-8 object-contain md:self-start"
               />
-              <div className="flex gap-3">
+              <textarea
+                placeholder={`Reply to @${username}...`}
+                className="border-[1px] border-Grayish-Blue/30 rounded px-5 h-24 py-2 resize-none placeholder:text-Grayish-Blue hover:border-Moderate-blue focus:outline-Moderate-blue active:outline-Moderate-blue transition-all hidden md:block md:w-full"
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+              />
+              <div className="flex gap-3 md:flex-col-reverse">
                 <button
                   className="border border-Moderate-blue text-Moderate-blue font-medium rounded px-5 py-2 cursor-pointer hover:bg-gray-100 transition-all"
                   onClick={cancelReplying}
