@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `comment` ADD COLUMN `userId` INTEGER NOT NULL;
+ALTER TABLE `Comment` ADD COLUMN `userId` INTEGER NOT NULL;
 
 -- CreateTable
 CREATE TABLE `User` (
