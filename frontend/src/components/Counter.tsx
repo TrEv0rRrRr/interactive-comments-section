@@ -38,9 +38,9 @@ const Counter = ({ count }: Props) => {
   return (
     <div className="flex rounded-md items-center gap-3 px-3 py-1 bg-Light-gray md:flex-col md:py-3">
       <button
-        className={`cursor-pointer relative after:absolute after:content-[''] after:w-6 after:bg-Moderate-blue/30 after:top-1/2 after:right-1/2 after:translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:z-10 ${
-          userVote === 1 ? "after:h-6" : "after:h-0"
-        }`}
+        className={`cursor-pointer relative after:absolute after:content-[''] after:w-6 after:top-1/2 after:right-1/2 after:translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:z-10 ${
+          userVote === 1 ? "after:h-6 after:bg-Moderate-blue/30" : "after:h-0"
+        } hover:after:h-6 hover:after:bg-Moderate-blue/10`}
         onClick={increment}
       >
         <img src={PlusIcon} alt="" aria-hidden className="object-contain" />
@@ -49,9 +49,9 @@ const Counter = ({ count }: Props) => {
         {counter}
       </span>
       <button
-        className={`cursor-pointer relative after:absolute after:content-[''] after:w-6 after:bg-Moderate-blue/30 after:top-1/2 after:right-1/2 after:translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:z-10 ${
-          userVote === -1 ? "after:h-6" : "after:h-0"
-        }`}
+        className={`cursor-pointer relative after:absolute after:content-[''] after:w-6 after:top-1/2 after:right-1/2 after:translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:z-10 ${
+          userVote === -1 ? "after:h-6 after:bg-Moderate-blue/30" : "after:h-0"
+        } hover:after:h-6 hover:after:bg-Moderate-blue/10`}
         onClick={decrement}
       >
         <img src={MinusIcon} alt="" aria-hidden className="object-contain" />
