@@ -88,44 +88,58 @@ const Comment = () => {
               : ""
           }`}
         >
-          <div className="flex items-center gap-3">
-            <div className="flex gap-3 items-center">
-              <img
-                src={users[userId]?.avatar}
-                alt={`${users[userId]?.username}'s profile picture`}
-                className="w-8 h-8 object-contain"
-              />
-              <div className="flex gap-3">
-                <span className="font-medium">{users[userId]?.username}</span>
-                {isCurrentUser && (
-                  <span className="bg-Moderate-blue text-white p-1 rounded text-xs">
-                    you
-                  </span>
-                )}
-              </div>
+          <div className="flex items-center gap-5">
+            <div className="hidden md:block">
+              <Counter count={score} />
             </div>
-            <span className="text-Grayish-Blue">
-              {getRelativeTime(new Date(createdAt))}
-            </span>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-3 items-center">
+                  <img
+                    src={users[userId]?.avatar}
+                    alt={`${users[userId]?.username}'s profile picture`}
+                    className="w-8 h-8 object-contain"
+                  />
+                  <div className="flex gap-3">
+                    <span className="font-medium">
+                      {users[userId]?.username}
+                    </span>
+                    {isCurrentUser && (
+                      <span className="bg-Moderate-blue text-white p-1 rounded text-xs">
+                        you
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <span className="text-Grayish-Blue text-[.85rem] md:text-base">
+                  {getRelativeTime(new Date(createdAt))}
+                </span>
+              </div>
+
+              {isCurrentUser && isEditing ? (
+                <div className="flex">
+                  <Counter count={score} />
+                  <textarea
+                    className="border-[1px] border-Grayish-Blue/30 rounded px-5 pb-5 hover:border-Moderate-blue transition-all focus:outline-Moderate-blue active:outline-Moderate-blue pt-4 h-max resize-none"
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <p className="text-Grayish-Blue">
+                  <span className="text-Moderate-blue font-medium">
+                    {formatUserAt(replyingTo)}
+                  </span>{" "}
+                  {content}
+                </p>
+              )}
+            </div>
           </div>
 
-          {isCurrentUser && isEditing ? (
-            <textarea
-              className="border-[1px] border-Grayish-Blue/30 rounded px-5 pb-5 hover:border-Moderate-blue transition-all focus:outline-Moderate-blue active:outline-Moderate-blue pt-4 h-max resize-none"
-              value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
-            />
-          ) : (
-            <p className="text-Grayish-Blue">
-              <span className="text-Moderate-blue font-medium">
-                {formatUserAt(replyingTo)}
-              </span>{" "}
-              {content}
-            </p>
-          )}
-
           <div className="flex items-center justify-between w-full">
-            <Counter count={score} />
+            <div className="block md:hidden">
+              <Counter count={score} />
+            </div>
             {isEditing && isCurrentUser ? (
               <div className="flex gap-3">
                 <button
@@ -142,7 +156,7 @@ const Comment = () => {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center">
+              <div className="flex items-center md:absolute md:top-4 md:right-8">
                 {!isEditing && isCurrentUser ? (
                   <>
                     <div className="flex gap-3">
