@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,9 +18,6 @@ model Comment {
   parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
   replies    Comment[] @relation("CommentToComment")
   user       User      @relation(fields: [userId], references: [id])
-
-  @@index([parentId], map: "Comment_parentId_fkey")
-  @@index([userId], map: "Comment_userId_fkey")
 }
 
 model User {
