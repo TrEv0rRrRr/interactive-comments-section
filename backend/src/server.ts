@@ -1,7 +1,7 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
-import { commentsRouter } from "./routes/commentsRouter/commentsRoutes";
-import { usersRouter } from "./routes/usersRouter/usersRoutes";
+import { commentsRouter } from "./routes/commentsRouter/commentsRoutes.js";
+import { usersRouter } from "./routes/usersRouter/usersRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
