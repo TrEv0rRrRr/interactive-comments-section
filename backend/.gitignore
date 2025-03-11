@@ -13,6 +13,8 @@ dist-ssr
 *.local
 prisma-migrations
 */*.http
+prisma/migrations
+prisma/seed.js
 
 # Editor directories and files
 .vscode/*
