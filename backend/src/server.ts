@@ -1,10 +1,11 @@
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express from "express";
+import type { Request, Response } from "express";
 import { commentsRouter } from "./routes/commentsRouter/commentsRoutes.js";
 import { usersRouter } from "./routes/usersRouter/usersRoutes.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.json());

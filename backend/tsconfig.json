@@ -6,6 +6,9 @@
     "strict": true,
     "rootDir": "src",
     "esModuleInterop": true,
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
   }
 }

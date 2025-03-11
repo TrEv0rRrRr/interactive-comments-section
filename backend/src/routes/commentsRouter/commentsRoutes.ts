@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { Request, Response, Router } from "express";
-
-const prisma = new PrismaClient();
+import type { Request, Response } from "express"; 
+import { Router } from "express";
+import prisma from "../../lib/prisma.js";
 const router = Router();
 
 type ParentId = number | null;
