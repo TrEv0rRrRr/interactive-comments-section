@@ -11,10 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
-prisma-migrations
-*/*.http
-prisma/migrations
+prisma/migrations/
 prisma/seed.js
+*/*.http
 
 # Editor directories and files
 .vscode/*
