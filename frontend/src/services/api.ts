@@ -2,8 +2,8 @@ import axios from "axios";
 import { Comment } from "../types/Comments";
 import { User } from "../types/Users";
 
-const API_COMMENTS_URL = "http://localhost:3000/comments";
-const API_USERS_URL = "http://localhost:3000/users";
+const API_COMMENTS_URL = import.meta.env.VITE_API_COMMENTS_URL;
+const API_USERS_URL = import.meta.env.VITE_API_USERS_URL;
 
 /**
  * Fetches comments from the API.
